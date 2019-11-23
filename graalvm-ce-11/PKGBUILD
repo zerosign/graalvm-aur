@@ -1,0 +1,42 @@
+# Maintainer: zerosign <r1nlx0@gmail.com>
+
+_vendor=ce
+_package=graalvm-$_vendor
+pkgbase=$_package-11
+pkgname=('graalvm-ce-11-jdk' 'graalvm-ce-11-native-image' 'graalvm-ce-11-llvm-toolchain')
+pkgver=19.3.0
+pkgrel=1
+pkgdesc="(Unofficial) Universal VM for a polyglot world. Our mission: Make development more productive and run programs faster anywhere."
+arch=('x86_64')
+url="https://github.com/graalvm/graalvm-ce-builds"
+# follow graalvm binary licenses
+license=('gpl')
+groups=()
+depends=('java-runtime-common'
+         'java-environment-common'
+         'ca-certificates-utils'
+         'nss')
+# checkdepends=()
+provides=("java-runtime=$_javaver"
+          "java-environment=$_javaver"
+          "java-runtime-headless=$_javaver"
+          'graal' "$pkgbase")
+conflicts=('graal' "$pkgbase")
+# replaces=('graal-bin' 'graal')
+# backup=()
+# options=()
+install="$pkgname.install"
+# changelog=
+source=("https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${pkgver}/graalvm-ce-java11-linux-amd64-${pkgver}.tar.gz")
+sha256sums=('238c5c21bb4aa292caf95b2aca592ce8c1be2f036d93af48cd865f67d558f907')
+
+_jvmdir=usr/lib/jvm/java-${_javaver}-graal
+
+package() {
+  cd "graalvm-ce-java${_javaver}-${pkgver}"
+  mkdir -p "$pkgdir/usr/lib/jvm/java-${_javaver}-graal/"
+  cp -a -t "$pkgdir/usr/lib/jvm/java-11-graal/" *
+  install -DTm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
